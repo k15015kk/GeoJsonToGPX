@@ -1,3 +1,14 @@
 // Place all the styles related to the Convert controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.input-geojson {
+    width: 100%;
+    height: 50vh;
+    font-size: 16px;
+}
+
+.send-geojson {
+    width: 360px;
+    height: 36px;
+}

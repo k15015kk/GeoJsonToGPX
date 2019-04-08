@@ -1,66 +1,31 @@
 require 'rexml/document'
 
 class ConvertController < ApplicationController
+    protect_from_forgery except: :converter
+
     def input
         
     end
 
     def converter
-        test_json = '{
-            "features": [
-                {
-                    "geometry": {
-                        "coordinates": [
-                            137.3798151,
-                            34.7664678
-                        ],
-                        "type": "Point"
-                    },
-                    "properties": {
-                        "time": "2019/04/01 12:34:33"
-                    },
-                    "type": "Feature"
-                },
-                {
-                    "geometry": {
-                        "coordinates": [
-                            137.3797671,
-                            34.7665228
-                        ],
-                        "type": "Point"
-                    },
-                    "properties": {
-                        "time": "2019/04/01 12:34:34"
-                    },
-                    "type": "Feature"
-                },
-                {
-                    "geometry": {
-                        "coordinates": [
-                            137.3797217,
-                            34.7665995
-                        ],
-                        "type": "Point"
-                    },
-                    "properties": {
-                        "time": "2019/04/01 12:34:35"
-                    },
-                    "type": "Feature"
-                }
-            ],
-            "type": "FeatureCollection"
-        }'
+        geojson = params[:geojson]
 
-        geojson_hash = JSON.parse(test_json)
+        begin
+            geojson_hash = JSON.parse(geojson)
+        rescue JSON::ParserError => e
+            return
+        end
 
         # XMLドキュメント作成とXMLの一番最初の行（XMLの設定）の宣言
         doc = REXML::Document.new
         doc << REXML::XMLDecl.new('1.0', 'UTF-8')
 
         # gpxタグ設定
+        creator = 'kyotonagoya'
+
         gpx = REXML::Element.new('gpx')
         gpx.add_attribute('version','1.1')
-        gpx.add_attribute('creator','kyotonagoya')
+        gpx.add_attribute('creator',creator)
         gpx.add_attribute('xmlns:xsi','http://www.w3.org/2001/XMLSchema-instance')
         gpx.add_attribute('xmlns','http://www.topografix.com/GPX/1/1')
         gpx.add_attribute('xsi:schemaLocation','http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd')
